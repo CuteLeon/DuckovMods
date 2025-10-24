@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Duckov.UI;
+using UnityEngine;
 
 namespace DevToolMod
 {
@@ -7,7 +8,17 @@ namespace DevToolMod
         protected override void OnAfterSetup()
         {
             Debug.Log("DevToolMod OnAfterSetup.");
+            InventoryView.OnActiveViewChanged += this.InventoryView_OnActiveViewChanged;
+            ItemHoveringUI.onSetupItem += this.ItemHoveringUI_onSetupItem;
             base.OnAfterSetup();
+        }
+
+        private void ItemHoveringUI_onSetupItem(ItemHoveringUI arg1, ItemStatsSystem.Item arg2)
+        {
+        }
+
+        private void InventoryView_OnActiveViewChanged()
+        {
         }
 
         protected override void OnBeforeDeactivate()
