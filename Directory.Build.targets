@@ -1,10 +1,27 @@
 <Project>
 	<PropertyGroup>
 	    <DuckovPath>D:\SteamLibrary\steamapps\common\Escape from Duckov</DuckovPath>
+		<ModsRootPath>$(DuckovPath)\Duckov_Data\Mods</ModsRootPath>
+		<ModCurrentDir>$(ModsRootPath)\$(MSBuildProjectName)</ModCurrentDir>
 	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\TeamSoda.*" />
 		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\ItemStatsSystem.dll" />
 		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\Unity*" />
-	</ItemGroup> 
+	</ItemGroup>
+
+	<Target Name="CopyModArtifacts" AfterTargets="Build">
+		<ItemGroup>
+			<ModSourceFiles Include="$(TargetPath)" Condition="Exists('$(TargetPath)')" />
+			<ModSourceFiles Include="$(MSBuildProjectDirectory)\info.ini" Condition="Exists('$(MSBuildProjectDirectory)\info.ini')" />
+			<ModSourceFiles Include="$(MSBuildProjectDirectory)\preview.png" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+		</ItemGroup>
+
+		<MakeDir Directories="$(ModsRootPath)" Condition="!Exists('$(ModsRootPath)')" />
+		<MakeDir Directories="$(ModCurrentDir)" Condition="!Exists('$(ModCurrentDir)')" />
+
+		<Copy SourceFiles="@(ModSourceFiles)"
+			DestinationFolder="$(ModCurrentDir)"
+			OverwriteReadOnlyFiles="true" />
+	</Target>
 </Project>
