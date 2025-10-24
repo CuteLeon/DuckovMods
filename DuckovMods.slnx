@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Folder Name="/eng/">
+    <File Path="Directory.Build.targets" />
+  </Folder>
+  <Project Path="DevToolMod/DevToolMod.csproj" />
+</Solution>
