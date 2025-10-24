@@ -1,30 +1,68 @@
 ﻿using Duckov.UI;
+using Duckov.Utilities;
+using ItemStatsSystem;
+using TMPro;
 using UnityEngine;
 
 namespace DevToolMod
 {
     public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
-        protected override void OnAfterSetup()
+        TextMeshProUGUI text = null!;
+
+        TextMeshProUGUI Text
         {
-            Debug.Log("DevToolMod OnAfterSetup.");
-            InventoryView.OnActiveViewChanged += this.InventoryView_OnActiveViewChanged;
-            ItemHoveringUI.onSetupItem += this.ItemHoveringUI_onSetupItem;
-            base.OnAfterSetup();
+            get
+            {
+                if (this.text == null)
+                {
+                    this.text = Instantiate(GameplayDataSettings.UIStyle.TemplateTextUGUI);
+                }
+                return this.text;
+            }
         }
 
-        private void ItemHoveringUI_onSetupItem(ItemHoveringUI arg1, ItemStatsSystem.Item arg2)
+        void Awake()
         {
+            Debug.Log("DisplayItemValue Loaded!!!");
         }
 
-        private void InventoryView_OnActiveViewChanged()
+        void OnDestroy()
         {
+            if (this.text != null)
+                Destroy(this.text);
         }
 
-        protected override void OnBeforeDeactivate()
+        void OnEnable()
         {
-            Debug.Log("DevToolMod OnBeforeDeactivate.");
-            base.OnBeforeDeactivate();
+            ItemHoveringUI.onSetupItem += this.OnSetupItemHoveringUI;
+            ItemHoveringUI.onSetupMeta += this.OnSetupMeta;
+        }
+
+        void OnDisable()
+        {
+            ItemHoveringUI.onSetupItem -= this.OnSetupItemHoveringUI;
+            ItemHoveringUI.onSetupMeta -= this.OnSetupMeta;
+        }
+
+        private void OnSetupMeta(ItemHoveringUI uI, ItemMetaData data)
+        {
+            this.Text.gameObject.SetActive(false);
+        }
+
+        private void OnSetupItemHoveringUI(ItemHoveringUI uiInstance, Item item)
+        {
+            if (item == null)
+            {
+                this.Text.gameObject.SetActive(false);
+                return;
+            }
+
+            this.Text.gameObject.SetActive(true);
+            this.Text.transform.SetParent(uiInstance.LayoutParent);
+            this.Text.transform.localScale = Vector3.one;
+            this.Text.text = $"${item.GetTotalRawValue() / 2}";
+            this.Text.fontSize = 20f;
         }
     }
 }
