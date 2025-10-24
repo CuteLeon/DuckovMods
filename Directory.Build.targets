@@ -11,6 +11,8 @@
 	</ItemGroup>
 
 	<Target Name="CopyModArtifacts" AfterTargets="Build">
+		<Message Text="[DuckovMods] ModCurrentDir: $(ModCurrentDir)" Importance="High" />
+
 		<ItemGroup>
 			<ModSourceFiles Include="$(TargetPath)" Condition="Exists('$(TargetPath)')" />
 			<ModSourceFiles Include="$(MSBuildProjectDirectory)\info.ini" Condition="Exists('$(MSBuildProjectDirectory)\info.ini')" />
