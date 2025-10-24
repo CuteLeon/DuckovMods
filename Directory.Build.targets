@@ -22,14 +22,19 @@
 			<MissingModFiles Include="@(ExpectedModFiles)" Condition="!Exists('%(Identity)')" />
 		</ItemGroup>
 
+		<ItemGroup>
+			<AllCopyModFiles Include="@(ExistingModFiles)" />
+			<AllCopyModFiles Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+		</ItemGroup>
+
 		<Warning Text="[DuckovMods] Missing file: %(MissingModFiles.Identity)" Condition="@(MissingModFiles) != ''" />
 
 		<MakeDir Directories="$(ModsRootPath)" Condition="!Exists('$(ModsRootPath)')" />
 		<MakeDir Directories="$(ModCurrentDir)" Condition="!Exists('$(ModCurrentDir)')" />
 
-		<Copy SourceFiles="@(ExistingModFiles)" 
-			DestinationFolder="$(ModCurrentDir)" 
-			Condition="@(ExistingModFiles) != ''"
-			OverwriteReadOnlyFiles="true"/>
+		<Copy SourceFiles="@(AllCopyModFiles)"
+			DestinationFolder="$(ModCurrentDir)"
+			Condition="@(AllCopyModFiles) != ''"
+			OverwriteReadOnlyFiles="true" />
 	</Target>
 </Project>
