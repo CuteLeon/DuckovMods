@@ -14,16 +14,22 @@
 		<Message Text="[DuckovMods] ModCurrentDir: $(ModCurrentDir)" Importance="High" />
 
 		<ItemGroup>
-			<ModSourceFiles Include="$(TargetPath)" Condition="Exists('$(TargetPath)')" />
-			<ModSourceFiles Include="$(MSBuildProjectDirectory)\info.ini" Condition="Exists('$(MSBuildProjectDirectory)\info.ini')" />
-			<ModSourceFiles Include="$(MSBuildProjectDirectory)\preview.png" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+			<ExpectedModFiles Include="$(TargetPath)" />
+			<ExpectedModFiles Include="$(MSBuildProjectDirectory)\info.ini" />
+			<ExpectedModFiles Include="$(MSBuildProjectDirectory)\preview.png" />
+
+			<ExistingModFiles Include="@(ExpectedModFiles)" Condition="Exists('%(Identity)')" />
+			<MissingModFiles Include="@(ExpectedModFiles)" Condition="!Exists('%(Identity)')" />
 		</ItemGroup>
+
+		<Warning Text="[DuckovMods] Missing file: %(MissingModFiles.Identity)" Condition="@(MissingModFiles) != ''" />
 
 		<MakeDir Directories="$(ModsRootPath)" Condition="!Exists('$(ModsRootPath)')" />
 		<MakeDir Directories="$(ModCurrentDir)" Condition="!Exists('$(ModCurrentDir)')" />
 
-		<Copy SourceFiles="@(ModSourceFiles)"
-			DestinationFolder="$(ModCurrentDir)"
-			OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(ExistingModFiles)" 
+			DestinationFolder="$(ModCurrentDir)" 
+			Condition="@(ExistingModFiles) != ''"
+			OverwriteReadOnlyFiles="true"/>
 	</Target>
 </Project>
