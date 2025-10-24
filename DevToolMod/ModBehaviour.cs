@@ -35,23 +35,27 @@ namespace DevToolMod
 
         void OnEnable()
         {
+            Debug.Log("DisplayItemValue Enable!!!");
             ItemHoveringUI.onSetupItem += this.OnSetupItemHoveringUI;
             ItemHoveringUI.onSetupMeta += this.OnSetupMeta;
         }
 
         void OnDisable()
         {
+            Debug.Log("DisplayItemValue Disable!!!");
             ItemHoveringUI.onSetupItem -= this.OnSetupItemHoveringUI;
             ItemHoveringUI.onSetupMeta -= this.OnSetupMeta;
         }
 
         private void OnSetupMeta(ItemHoveringUI uI, ItemMetaData data)
         {
+            Debug.Log("DisplayItemValue SetupMeta!!!");
             this.Text.gameObject.SetActive(false);
         }
 
         private void OnSetupItemHoveringUI(ItemHoveringUI uiInstance, Item item)
         {
+            Debug.Log("DisplayItemValue OnSetupItemHoveringUI!!!");
             if (item == null)
             {
                 this.Text.gameObject.SetActive(false);
